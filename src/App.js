@@ -1,4 +1,3 @@
-import logo from "./logo.svg";
 import "./App.css";
 import {
   BrowserRouter as Router,
@@ -43,10 +42,7 @@ const publicRoutesName = [
     path: "/registration",
     Component: <Registration />,
   },
-  {
-    path: "/updata",
-    Component: <Update />,
-  },
+ 
   {
     path: "/",
     Component: <Home />,
@@ -72,6 +68,11 @@ const privateRoutesName = [
   {
     path:"/Blog/:id",
     Component:<BlogDetails/>
+  }
+  ,
+  {
+    path: "/updata",
+    Component: <Update />,
   }
 ];
 

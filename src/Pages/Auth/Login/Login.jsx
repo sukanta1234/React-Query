@@ -20,7 +20,7 @@ import { toast } from "react-toastify";
 
 
 
-// TODO remove, this demo shouldn't need to reset the theme.
+
 
 const defaultTheme = createTheme();
 
@@ -35,7 +35,7 @@ export default function Login() {
                 
             }
             if (data.status===201) {
-                toast.error("login erroror")
+                toast.error("login error")
                 
             }
         }

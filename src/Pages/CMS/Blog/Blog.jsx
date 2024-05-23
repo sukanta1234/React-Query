@@ -55,7 +55,7 @@ const Blog = () => {
   const handlePost = (item) => {
     setSelectedCategory(item._id);
     setFilteredBlogs([item]);
-  };
+  }
 
   const handleAll = () => {
     setSelectedCategory(null);
