@@ -17,12 +17,14 @@ import { useForm } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
 import { registerApi } from "../../../API/Functions/register.api";
 import { toast } from "react-toastify";
+import { useState } from "react";
 
 
 
 const defaultTheme = createTheme();
 
 export default function Registration() {
+  const [image,setImage]=useState()
   const { mutate, isPending } = useMutation({
     mutationFn: registerApi,
     onSuccess: (data) => {
@@ -137,8 +139,14 @@ export default function Registration() {
                   type="file"
                   id="photo"
                   error={errors.photo}
-                  helperText={errors.photo && "photo is required"}
+                  onChange={((e)=>setImage(e.target.files[0]))}
+                  helperText={!image && errors.photo && "photo is required"}
                 />
+                {image!=="" && image!==null && image!==undefined?(<>
+                <img src={URL.createObjectURL(image)} alt="hello world" height={"150px"} />
+                </>):(<>
+                {image==="" && <p>drag and drop image here</p>}
+                </>)}
               </Grid>
             </Grid>
             {isPending ? (

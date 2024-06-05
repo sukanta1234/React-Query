@@ -12,55 +12,48 @@ import Grid from "@mui/material/Grid";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
-import { loginApi } from "../../../API/Functions/login.api";
+
 import { toast } from "react-toastify";
-
-
-
-
+import { useDispatch, useSelector } from "react-redux";
+import { loginApi } from "../../../Toolkit/authSlice";
+import { useEffect } from "react";
 
 const defaultTheme = createTheme();
 
 export default function Login() {
-    const {isPending,mutate}=useMutation({
-        mutationFn:loginApi,
-        onSuccess:(data)=>{
-            if (data.status===200) {
-                toast.success(data.message)
-                localStorage.setItem("token",data.token)
-                localStorage.setItem("id",data.user._id)
-                
-            }
-            if (data.status===201) {
-                toast.error("login error")
-                
-            }
-        }
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const data = useSelector((state) => state.auth);
+  const {
+    register,
+    handleSubmit,
 
-    })
-
-    const {
-        register,
-        handleSubmit,
-        
-        formState: { errors },
-      } = useForm()
-      const onSubmit = (data) =>{
-       
-        const value={
-            "email":data.email,
-            "password":data.password
-        }
-        mutate(value)
-
+    formState: { errors },
+  } = useForm();
+  const onSubmit = (data) => {
+    const value = {
+      email: data.email,
+      password: data.password,
+    };
+    dispatch(loginApi(value));
+  };
+  useEffect(() => {
+    const fetch = () => {
+      const token = localStorage.getItem("token");
+      const path = window.location.pathname === "/login";
+      if (token) {
+        return path && navigate("/");
       }
+    };
+    fetch();
+  }, [navigate, data.isRedirect]);
 
   return (
     <ThemeProvider theme={defaultTheme}>
-      <Grid container component="main" >
+      <Grid container component="main">
         <CssBaseline />
         <Grid
           item
@@ -74,8 +67,8 @@ export default function Login() {
 
             backgroundSize: "cover",
             backgroundPosition: "center",
-            height:"600px",width:"500px",
-            
+            height: "600px",
+            width: "500px",
           }}
         />
         <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
@@ -101,7 +94,7 @@ export default function Login() {
               sx={{ mt: 1 }}
             >
               <TextField
-              {...register("email",{required:true})}
+                {...register("email", { required: true })}
                 margin="normal"
                 required
                 fullWidth
@@ -114,7 +107,7 @@ export default function Login() {
                 helperText={errors.email && "email is required"}
               />
               <TextField
-              {...register("password",{required:true})}
+                {...register("password", { required: true })}
                 margin="normal"
                 required
                 fullWidth
@@ -126,40 +119,41 @@ export default function Login() {
                 error={errors.password}
                 helperText={errors.password && "password is required"}
               />
-             {isPending?(<>
-             
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                sx={{ mt: 3, mb: 2 }}
-              >
-                Loading....
-              </Button>
-             </>):(<>
-             
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                sx={{ mt: 3, mb: 2 }}
-              >
-                Sign In
-              </Button>
-             </>)}
+              {data.status === "idle" ? (
+                <>
+                  <Button
+                    type="submit"
+                    fullWidth
+                    variant="contained"
+                    sx={{ mt: 3, mb: 2 }}
+                  >
+                    Sign In
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Button
+                    type="submit"
+                    fullWidth
+                    variant="contained"
+                    sx={{ mt: 3, mb: 2 }}
+                  >
+                    Loading....
+                  </Button>
+                </>
+              )}
               <Grid container>
-                <Grid item xs>
-                  <Typography component={Link} to={"/updata"} variant="body2" sx={{color:"black"}}>
-                    Forgot password?
-                  </Typography>
-                </Grid>
                 <Grid item>
-                  <Typography component={Link} to="/registration" variant="body2" sx={{color:"black"}}>
+                  <Typography
+                    component={Link}
+                    to="/registration"
+                    variant="body2"
+                    sx={{ color: "black" }}
+                  >
                     {"Don't have an account? Sign Up"}
                   </Typography>
                 </Grid>
               </Grid>
-             
             </Box>
           </Box>
         </Grid>

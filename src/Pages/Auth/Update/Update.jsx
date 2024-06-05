@@ -16,10 +16,15 @@ import { useForm } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
 import { updateApi } from "../../../API/Functions/update.api";
 import { toast } from "react-toastify";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { removeToken } from "../../../Toolkit/authSlice";
 
 const defaultTheme = createTheme();
 
 export default function Update() {
+  const dispatch=useDispatch()
+  const navigate=useNavigate()
   const id = localStorage.getItem("id");
   console.log(id,"update");
   const { isPending, mutate } = useMutation({
@@ -27,6 +32,8 @@ export default function Update() {
     onSuccess: (data) => {
       if (data.success===true) {
         toast.success(data.msg)
+        navigate("/login")
+        dispatch(removeToken())
         
       }
     },

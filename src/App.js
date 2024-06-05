@@ -9,6 +9,9 @@ import { Component, Suspense, lazy } from "react";
 import Footer from "./Pages/Layout/Footer/Footer";
 import { toast } from "react-toastify";
 import BlogDetails from "./Pages/CMS/BlogDetails/BlogDetails";
+import { useDispatch } from "react-redux";
+import { useEffect } from "react";
+import { checkToken } from "./Toolkit/authSlice";
 
 const Login = lazy(() => import("./Pages/Auth/Login/Login"));
 const Registration = lazy(() =>
@@ -77,6 +80,10 @@ const privateRoutesName = [
 ];
 
 function App() {
+  const dispatch=useDispatch()
+  useEffect(()=>{
+    dispatch(checkToken())
+  },[dispatch])
   return (
     <Suspense fallback={<h1>Loading......</h1>}>
       <Router>

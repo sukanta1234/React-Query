@@ -7,6 +7,9 @@ const axiosInstance=axios.create({
 })
 export {adminUrl}
 
+export const profile=(media)=>{
+  return `https://restapinodejs.onrender.com/${media}`
+}
 
 export const banner_pic=(media)=>{
   return `https://restapinodejs.onrender.com/api/banner/photo/${media}`

@@ -17,10 +17,12 @@ import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import ThumbDownIcon from "@mui/icons-material/ThumbDown";
 import { disLikeapi } from "../../../API/Functions/disLike.api";
 import { useEffect, useState } from "react";
-import { QueryClient, useMutation, useQuery } from "@tanstack/react-query";
+import { QueryClient, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 const BlogDetails = () => {
   const { id } = useParams();
+  const queryClient=useQueryClient()
+   
   const [likeData, setLikeData] = useState(0); 
   const [DisLike, setDisLike] = useState(0);
   const { data } = useQuery({
@@ -38,7 +40,7 @@ const BlogDetails = () => {
     mutationFn: createCommentApi,
     mutationKey: "commentCreate",
     onSuccess: async (data) => {
-      await QueryClient.invalidateQueries("comment");
+      await queryClient.invalidateQueries("comment");
       toast.success("Comment Created Successfully");
     },
   });

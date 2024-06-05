@@ -14,43 +14,64 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { removeToken } from "../../../Toolkit/authSlice";
+import Tooltip from "@mui/material/Tooltip";
+import Avatar from "@mui/material/Avatar";
+import { profile } from "../../../API/Axios/axiosInstance";
 
 const drawerWidth = 240;
-const navItems = ["Course","Blog","Contact"];
+const navItems = ["Course", "Blog", "Contact"];
 
 export default function DrawerAppBar(props) {
+  const image=localStorage.getItem("image")
+  const dispatch = useDispatch();
+  const data = useSelector((state) => state.auth);
   const { window } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
   };
+  const handleClick = () => {
+    dispatch(removeToken());
+  };
 
   const drawer = (
     <Box onClick={handleDrawerToggle} sx={{ textAlign: "center" }}>
       <Typography variant="h6" sx={{ my: 2 }}>
-      EDUCare
+        EDUCare
       </Typography>
       <Divider />
       <List>
         <ListItem disablePadding>
-          <ListItemButton sx={{ justifyContent: "center" }} component={Link} to="/">
+          <ListItemButton
+            sx={{ justifyContent: "center" }}
+            component={Link}
+            to="/"
+          >
             Home
           </ListItemButton>
-
         </ListItem>
         {navItems.map((item) => (
           <ListItem key={item} disablePadding>
-            <ListItemButton sx={{ textAlign: "center" }} component={Link} to={`/${item}`}>
+            <ListItemButton
+              sx={{ textAlign: "center" }}
+              component={Link}
+              to={`/${item}`}
+            >
               <ListItemText primary={item} />
             </ListItemButton>
           </ListItem>
         ))}
         <ListItem disablePadding>
-          <ListItemButton sx={{ justifyContent: "center" }} component={Link} to="/login">
+          <ListItemButton
+            sx={{ justifyContent: "center" }}
+            component={Link}
+            to="/login"
+          >
             Login
           </ListItemButton>
-
         </ListItem>
       </List>
     </Box>
@@ -81,7 +102,7 @@ export default function DrawerAppBar(props) {
             EDUCare
           </Typography>
           <Box sx={{ display: { xs: "none", sm: "block" } }}>
-          <Button sx={{ color: "#fff" }} component={Link} to={"/"}>
+            <Button sx={{ color: "#fff" }} component={Link} to={"/"}>
               Home
             </Button>
             <Button sx={{ color: "#fff" }} component={Link} to={"/about"}>
@@ -97,9 +118,28 @@ export default function DrawerAppBar(props) {
                 {item}
               </Button>
             ))}
-            <Button sx={{ color: "#fff" }} component={Link} to={"/login"}>
-              Login
-            </Button>
+            {data.isLoging === true ? (
+              <>
+              <Button sx={{ color: "#fff" }} component={Link} to={"/updata"}>
+                  Update Password
+                </Button>
+                <Tooltip>
+                  <IconButton sx={{ p: 0 }}>
+                    <Avatar alt="Remy Sharp" src={profile(image)} />
+                  </IconButton>
+                </Tooltip>
+                <Button sx={{ color: "#fff" }} onClick={handleClick}  component={Link} to={"/login"}>
+                  Logout
+                </Button>
+                
+              </>
+            ) : (
+              <>
+                <Button sx={{ color: "#fff" }} component={Link} to={"/login"}>
+                  Login
+                </Button>
+              </>
+            )}
           </Box>
         </Toolbar>
       </AppBar>
@@ -110,7 +150,7 @@ export default function DrawerAppBar(props) {
           open={mobileOpen}
           onClose={handleDrawerToggle}
           ModalProps={{
-            keepMounted: true, 
+            keepMounted: true,
           }}
           sx={{
             display: { xs: "block", sm: "none" },
